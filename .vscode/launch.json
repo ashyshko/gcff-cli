@@ -1,0 +1,20 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+      {
+          "type": "node",
+          "request": "launch",
+          "name": "Execute Command",
+          "skipFiles": [
+              "<node_internals>/**"
+          ],
+          "program": "${workspaceFolder}/bin/dev",
+          "args": [
+            "server",
+            "deploy",
+            "function-6xxx",
+            "../create-react-app-google-cloud-function/build/cloud/",
+          ],
+      }
+  ]
+}
