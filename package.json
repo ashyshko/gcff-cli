@@ -17,19 +17,22 @@
     "/oclif.manifest.json"
   ],
   "dependencies": {
+    "@google-cloud/storage": "^6.12.0",
     "@oclif/core": "^2",
     "@oclif/plugin-help": "^5",
     "@oclif/plugin-plugins": "^2.4.7",
-    "chalk": "^4.1.2"
+    "adm-zip": "^0.5.10",
+    "chalk": "^4.1.2",
+    "google-auth-library": "^8.9.0"
   },
   "devDependencies": {
     "@oclif/test": "^2.3.26",
+    "@types/adm-zip": "^0.5.0",
     "@types/chai": "^4",
     "@types/decompress": "^4.2.4",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.18.38",
     "chai": "^4",
-    "decompress": "^4.2.1",
     "eslint": "^7.32.0",
     "eslint-config-oclif": "^4",
     "eslint-config-oclif-typescript": "^1.0.3",

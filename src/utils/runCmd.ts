@@ -209,3 +209,25 @@ export async function gcloud(
   })
   return JSON.parse(new TextDecoder().decode(output))
 }
+
+export async function gcloudAccessToken(onStderr?: (message: string) => void): Promise<string> {
+  const res = await gcloudBinaryOutput(['auth', 'print-access-token'], {onStderr})
+  const body = new TextDecoder().decode(res)
+  const token = body.split(/[\n\r]/).find(v => v)
+  if (token === undefined) {
+    throw new Error('no token received')
+  }
+
+  return token
+}
+
+export async function gcloudProject(onStderr?: (message: string) => void): Promise<string> {
+  const res = await gcloudBinaryOutput(['config', 'get-value', 'project'], {onStderr})
+  const body = new TextDecoder().decode(res)
+  const project = body.split(/[\n\r]/).find(v => v)
+  if (project === undefined) {
+    throw new Error('no project received')
+  }
+
+  return project
+}

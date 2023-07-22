@@ -1,51 +1,15 @@
 import {Args, Command, Flags, ux} from '@oclif/core'
-import {gcloud, gcloudBinaryOutput} from '../../utils/runCmd'
-import * as decompress from 'decompress'
 import * as fs from 'node:fs/promises'
 import * as path from 'node:path'
+import * as AdmZip from 'adm-zip'
 import * as chalk from 'chalk'
-
-type CloudFunctionDescription = {
-  buildConfig: {
-    build: string;
-    entryPoint: string;
-    runtime: string;
-    source: {
-      storageSource: {
-        bucket: string;
-        object: string;
-      };
-    };
-    sourceProvenance: {
-      resolvedStorageSource: {
-        bucket: string;
-        generation: string;
-        object: string;
-      };
-    };
-  };
-  environment: string;
-  labels: {
-    [key: string]: string;
-  };
-  name: string;
-  serviceConfig: {
-    allTrafficOnLatestRevision: boolean;
-    availableCpu: string;
-    availableMemory: string;
-    ingressSettings: string;
-    maxInstanceCount: number;
-    maxInstanceRequestConcurrency: number;
-    revision: string;
-    service: string;
-    serviceAccountEmail: string;
-    timeoutSeconds: number;
-    uri: string;
-  };
-  state: string;
-  updateTime: string;
-  url: string;
-};
+import {
+  GcloudFunction,
+  gcloudAuth,
+  gcloudFlags,
+  gcloudFunctionDescribe,
+  gcloudFunctionWaitOperationCompletion,
+} from '../../utils/gcloud'
 
 export default class ServerDeploy extends Command {
   static description = 'Updates Google Cloud Function';
@@ -55,6 +19,12 @@ export default class ServerDeploy extends Command {
   ];
 
   static flags = {
+    ...gcloudFlags,
+    region: Flags.string({
+      description: 'The Cloud region for the function',
+      required: true,
+      default: 'us-central1',
+    }),
     force: Flags.boolean({
       char: 'f',
       description: 'Override existing source without verification',
@@ -74,9 +44,8 @@ export default class ServerDeploy extends Command {
       description:
         'Name of a Google Cloud Function (as defined in source code) that will be executed',
     }),
-    region: Flags.string({description: 'The Cloud region for the function'}),
-    project: Flags.string({
-      description: 'The Google Cloud project ID to use',
+    bucket: Flags.string({
+      description: 'Google Cloud Storage bucket name for serving content',
     }),
     yes: Flags.boolean({
       char: 'y',
@@ -101,6 +70,16 @@ export default class ServerDeploy extends Command {
 
     args.path = path.resolve(args.path)
 
+    const auth = await gcloudAuth(flags, this)
+
+    const func = await gcloudFunctionDescribe({
+      functionName: args.functionName,
+      region: flags.region,
+      auth,
+    })
+
+    /*
+
     if (flags.force) {
       this.notice('Dependency validation has been skipped via --force')
     } else {
@@ -116,54 +95,94 @@ export default class ServerDeploy extends Command {
         flags.merge,
         flags.yes,
       )
+    } */
+
+    if (
+      !flags.yes &&
+      !(await ux.confirm(
+        `You are about to upload ${chalk.bold(
+          args.path,
+        )} to Google Cloud Function ${chalk.bold(
+          `${auth.project}/${args.functionName}`,
+        )}. Confirm? ${chalk.gray('(yes/no)')}`,
+      ))
+    ) {
+      return
     }
 
-    {
-      if (
-        !flags.yes &&
-        !(await ux.confirm(
-          `You are about to upload ${chalk.bold(
-            args.path,
-          )} to Google Cloud Function ${chalk.bold(
-            flags.project ?
-              `${flags.project}/${args.functionName}` :
-              args.functionName,
-          )}. Confirm? ${chalk.gray('(yes/no)')}`,
-        ))
-      ) {
-        return
+    const content = await (() => {
+      const zip = new AdmZip()
+      zip.addLocalFolder(args.path)
+      return zip.toBufferPromise()
+    })()
+
+    const storageSource = await (async () => {
+      const res = await fetch(`https://cloudfunctions.googleapis.com/v2/projects/${auth.project}/locations/${flags.region}/functions:generateUploadUrl?access_token=${auth.accessToken}`, {
+        method: 'POST',
+      })
+
+      if (!res.ok) {
+        throw new Error(`can't get functino upload url: ${res.status} ${res.statusText}`)
       }
 
-      const extFlags: Record<string, string | true> = {}
-
-      if (flags.region !== undefined) {
-        extFlags.region = flags.region
+      const payload = (await res.json()) as {
+        uploadUrl: string,
+        storageSource: GcloudFunction['buildConfig']['source']['storageSource']
       }
 
-      if (flags.gen2 === true) {
-        extFlags.gen2 = true
-      }
-
-      if (flags['entry-point'] !== undefined) {
-        extFlags['entry-point'] = flags['entry-point']
-      }
-
-      extFlags.source = args.path
-
-      ux.action.start('Deploying cloud function')
-      const res = await gcloud(['functions', 'deploy', args.functionName], {
-        project: flags.project,
-        extFlags,
-        onStderr: msg => {
-          this.log(msg)
+      const uploadRes = await fetch(payload.uploadUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/zip',
         },
-      }) as CloudFunctionDescription
-      this.log(chalk.gray(`Deployed function: ${JSON.stringify(res, null, 2)}`))
-      ux.action.stop(chalk.green.bold('Successful'))
-      this.log(`${chalk.bold('URL:')} ${res.url}`)
+        body: content,
+      })
+
+      if (!uploadRes.ok) {
+        throw new Error(`can't upload function: ${uploadRes.status} ${uploadRes.statusText}`)
+      }
+
+      return payload.storageSource
+    })()
+
+    const dependencies = await (async () => {
+      return JSON.parse(await fs.readFile(path.join(args.path, 'package.json'), {encoding: 'utf-8'})).dependencies
+    })()
+
+    const res = await fetch(
+      `https://cloudfunctions.googleapis.com/v2/projects/${auth.project}/locations/${flags.region}/functions/${args.functionName}?updateMask=buildConfig.environmentVariables,buildConfig.source.storageSource&access_token=${auth.accessToken}`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          buildConfig: {
+            environmentVariables: {
+              PACKAGE_DEPENDENCIES: JSON.stringify(dependencies),
+            },
+            source: {
+              storageSource,
+            },
+          },
+        }),
+      },
+    )
+
+    if (!res.ok) {
+      throw new Error(
+        `can't patch google cloud function: ${res.status} ${res.statusText}`,
+      )
     }
+
+    await gcloudFunctionWaitOperationCompletion({
+      name: 'Deploying cloud function',
+      currentState: await res.json(),
+      accessToken: auth.accessToken,
+    })
   }
 
+  /*
   private async getUploadedManifest({
     functionName,
     region,
@@ -319,7 +338,7 @@ export default class ServerDeploy extends Command {
     }
 
     ux.action.stop(chalk.green.bold('Successful'))
-  }
+  } */
 
   private warnWithoutStack(message: string) {
     this.log(chalk.yellow(chalk.bold('Warning: ') + message))
