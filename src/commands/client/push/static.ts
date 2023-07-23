@@ -9,10 +9,10 @@ import {Storage} from '@google-cloud/storage'
 import {gcloudAuth, gcloudFlags, gcloudFunctionDescribe} from '../../../utils/gcloud'
 
 export default class ClientPushStatic extends Command {
-  static description = 'Push static content to';
+  static description = 'Push static content to server';
 
   static examples = [
-    '<%= config.bin %> <%= command.id %> internal/path /path/to/folder --defaultFile=index.html',
+    '<%= config.bin %> <%= command.id %> function-name server/path /path/to/folder --defaultFile=index.html',
   ];
 
   static flags = {
