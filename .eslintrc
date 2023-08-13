@@ -4,6 +4,10 @@
     "oclif-typescript"
   ],
   "rules": {
-    "camelcase": "off"
+    "camelcase": "off",
+    "unicorn/import-style": "off",
+    "@typescript-eslint/no-unused-vars": ["warn", {
+      "varsIgnorePattern": "^_"
+    }]
   }
 }

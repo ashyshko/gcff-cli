@@ -1,6 +1,6 @@
 import {Command, Flags, ux} from '@oclif/core'
 import chalk = require('chalk');
-import {gcloudAccessToken, gcloudProject} from './runCmd'
+import {gcloudAccessToken, gcloudProject} from './run-cmd'
 import {sleep} from './sleep'
 
 export const gcloudFlags = {

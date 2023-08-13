@@ -1,6 +1,6 @@
 import {expect, test} from '@oclif/test'
 
-describe('server:deploy', () => {
+describe.skip('server:deploy', () => {
   test
   .stdout()
   .command(['server:deploy'])

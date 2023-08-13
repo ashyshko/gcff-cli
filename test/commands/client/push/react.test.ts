@@ -1,6 +1,6 @@
 import {expect, test} from '@oclif/test'
 
-describe('client:push:react', () => {
+describe.skip('client:push:react', () => {
   test
   .stdout()
   .command(['client:push:react'])

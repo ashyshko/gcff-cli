@@ -1,7 +1,6 @@
 import {Args, Command, Flags, ux} from '@oclif/core'
 import * as fs from 'node:fs/promises'
 import * as path from 'node:path'
-// eslint-disable-next-line unicorn/import-style
 import * as chalk from 'chalk'
 
 import {OAuth2Client} from 'google-auth-library'

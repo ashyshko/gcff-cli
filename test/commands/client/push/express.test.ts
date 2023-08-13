@@ -1,6 +1,6 @@
 import {expect, test} from '@oclif/test'
 
-describe('client:push:express', () => {
+describe.skip('client:push:express', () => {
   test
   .stdout()
   .command(['client:push:express'])

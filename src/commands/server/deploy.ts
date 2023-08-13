@@ -72,7 +72,7 @@ export default class ServerDeploy extends Command {
 
     const auth = await gcloudAuth(flags, this)
 
-    const func = await gcloudFunctionDescribe({
+    const _func = await gcloudFunctionDescribe({
       functionName: args.functionName,
       region: flags.region,
       auth,
