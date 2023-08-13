@@ -6,10 +6,10 @@
   "bin": {
     "gcff": "./bin/run"
   },
-  "homepage": "https://github.com/other/gcff",
+  "homepage": "https://github.com/ashyshko/gcff-cli",
   "license": "MIT",
   "main": "dist/index.js",
-  "repository": "other/gcff",
+  "repository": "ashyshko/gcff-cli",
   "files": [
     "/bin",
     "/dist",
@@ -52,6 +52,9 @@
     ],
     "topicSeparator": " ",
     "topics": {
+    },
+    "macos": {
+      "identifier": "com.gcff.cli"
     }
   },
   "scripts": {
@@ -66,7 +69,7 @@
   "engines": {
     "node": ">=12.0.0"
   },
-  "bugs": "https://github.com/other/gcff/issues",
+  "bugs": "https://github.com/ashyshko/gcff-cli/issues",
   "keywords": [
     "oclif"
   ],

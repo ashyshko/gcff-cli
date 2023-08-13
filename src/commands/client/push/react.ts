@@ -68,7 +68,7 @@ export default class ClientPushReact extends Command {
     })
     if (!func) {
       ux.action.stop(
-        chalk.bold.green(
+        chalk.bold.red(
           `Provided cloud function is not found: ${auth.project}/${flags.region}/${args.functionName}`,
         ),
       )
@@ -186,6 +186,8 @@ export default class ClientPushReact extends Command {
       }),
     )
     progress.stop()
+
+    this.log(`${chalk.green('Completed!')} URL: ${func.url}/${args.destination}/`)
 
     /* g
     if (
