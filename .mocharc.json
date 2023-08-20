@@ -3,9 +3,10 @@
     "test/helpers/init.js",
     "ts-node/register"
   ],
-  "watch-extensions": [
+  "extensions": [
     "ts"
   ],
+  "spec": "test/**/*.ts",
   "recursive": true,
   "reporter": "spec",
   "timeout": 60000

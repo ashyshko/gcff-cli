@@ -6,8 +6,26 @@
   "rules": {
     "camelcase": "off",
     "unicorn/import-style": "off",
-    "@typescript-eslint/no-unused-vars": ["warn", {
-      "varsIgnorePattern": "^_"
-    }]
-  }
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "varsIgnorePattern": "^_"
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": [
+        "test/**"
+      ],
+      "rules": {
+        "@typescript-eslint/no-unused-vars": [
+          "off"
+        ],
+        "max-nested-callbacks": [
+          "off"
+        ]
+      }
+    }
+  ]
 }

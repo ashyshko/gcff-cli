@@ -1,5 +1,4 @@
 import {spawn} from 'node:child_process'
-import * as chalk from 'chalk'
 
 export class RunCmdError extends Error {
   public constructor(
@@ -46,7 +45,7 @@ export class RunCmdError extends Error {
   }
 
   public static isENOENT(e: unknown): boolean {
-    return e instanceof RunCmdError && e.isENOENT()
+    return (e instanceof RunCmdError) && e.isENOENT()
   }
 
   public static processExitCode(e: unknown): number | null {
@@ -81,7 +80,7 @@ export async function runCmd(
     })
 
     cmd.on('close', (code, signal) => {
-      if (code !== 0) {
+      if (code !== 0 || error !== null) {
         reject(new RunCmdError(error, code, signal))
         return
       }
@@ -89,145 +88,4 @@ export async function runCmd(
       resolve()
     })
   })
-}
-
-export class GcloudError extends Error {
-  public constructor(
-    public readonly endpoint: string,
-    public readonly statusCode: number,
-    public readonly statusText: string,
-    public readonly response: string,
-  ) {
-    super(
-      `gcloud error: endpoint ${endpoint} returned error '${response}' (HTTP code ${statusCode})`,
-    )
-    this.name = 'GcloudError'
-  }
-}
-
-export async function gcloudBinaryOutput(
-  args: string[],
-  {
-    project,
-    extFlags,
-    onStderr,
-  }: {
-    project?: string;
-    extFlags?: Record<string, string | true>;
-    onStderr?: (message: string) => void;
-  },
-): Promise<Buffer> {
-  args = [...args]
-  const addArg = (name: string, value: string | true | undefined) => {
-    if (value !== undefined) {
-      if (value === true) {
-        args.push(`--${name}`)
-      } else {
-        args.push(`--${name}=${value}`)
-      }
-    }
-  }
-
-  addArg('project', project)
-  addArg('quiet', true)
-
-  if (extFlags !== undefined) {
-    for (const [name, value] of Object.entries(extFlags)) {
-      addArg(name, value)
-    }
-  }
-
-  const stdoutBuffers: Buffer[] = []
-  let stderr = ''
-  const stderrDecoder = new TextDecoder()
-
-  try {
-    onStderr?.(chalk.gray(['gcloud', ...args].join(' ')))
-
-    await runCmd('gcloud', args, {
-      onStdout: buf => {
-        stdoutBuffers.push(buf)
-      },
-      onStderr: buf => {
-        const msg = stderrDecoder.decode(buf, {stream: true})
-        stderr += msg
-        onStderr?.(chalk.gray(msg))
-      },
-    })
-
-    return Buffer.concat(stdoutBuffers)
-  } catch (error) {
-    if (RunCmdError.isENOENT(error)) {
-      throw new Error(
-        "'gcloud' command is not found. Ensure that Google Cloud SDK is installed",
-      )
-    }
-
-    const exitCode = RunCmdError.processExitCode(error)
-    if (exitCode === null) {
-      throw error
-    }
-
-    if (exitCode !== 1) {
-      throw new Error(`'gcloud' command exited with code ${exitCode}`)
-    }
-
-    const httpError = stderr.match(
-      /^ERROR: \((.*)\) ResponseError: status=\[(\d+)], code=\[(.*)], message=\[(.*)]$/m,
-    )
-    if (!httpError) {
-      throw error
-    }
-
-    const [_, endpoint, statusCode, statusText, message] = httpError
-
-    throw new GcloudError(
-      endpoint,
-      Number.parseInt(statusCode, 10),
-      statusText,
-      message,
-    )
-  }
-}
-
-export async function gcloud(
-  args: string[],
-  {
-    project,
-    extFlags,
-    onStderr,
-  }: {
-    project?: string;
-    extFlags?: Record<string, string | true>;
-    onStderr?: (message: string) => void;
-  },
-): Promise<Record<string, unknown>> {
-  const output = await gcloudBinaryOutput(args, {
-    project,
-    extFlags: {format: 'json', ...extFlags},
-    onStderr,
-  })
-  return JSON.parse(new TextDecoder().decode(output))
-}
-
-export async function gcloudAccessToken(onStderr?: (message: string) => void): Promise<string> {
-  const res = await gcloudBinaryOutput(['auth', 'print-access-token'], {onStderr})
-  const body = new TextDecoder().decode(res)
-  const token = body.split(/[\n\r]/).find(v => v)
-  if (token === undefined) {
-    throw new Error('no token received')
-  }
-
-  return token
-}
-
-export async function gcloudProject(onStderr?: (message: string) => void): Promise<string> {
-  const res = await gcloudBinaryOutput(['config', 'get-value', 'project'], {onStderr})
-  const body = new TextDecoder().decode(res)
-  const project = body.split(/[\n\r]/).find(v => v)
-  if (project === undefined) {
-    throw new Error('no project received')
-  }
-
-  return project
 }
