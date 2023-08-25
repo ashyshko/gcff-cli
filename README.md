@@ -8,9 +8,77 @@ Deploy your web pages and API services easily with cloud function technology.
 [![GitHub license](https://img.shields.io/github/license/ashyshko/gcff-cli)](https://github.com/ashyshko/gcff-cli/blob/master/LICENSE)
 
 <!-- toc -->
+* [Motivation](#motivation)
+* [Features](#features)
+* [Prerequisites](#prerequisites)
+* [Setup](#setup)
 * [Usage](#usage)
 * [Commands](#commands)
 <!-- tocstop -->
+
+# Motivation
+
+Currently, there are many frameworks that provide scalable web service access. These frameworks are mainly optimized for high load use cases and user-facing functionality. However, they come with high maintenance costs, complicated initial deployment procedures, and requirements for system health status monitoring.
+
+On the other hand, there are cases when a web service is used by an internal team, so it is not subject to high load usage. In this scenario, the most important part is to deploy the functionality in the simplest way possible, minimizing idle maintenance costs without additional monitoring requirements.
+
+Abstracting from web service functionality, this dilemma can be framed as choosing between Google Cloud App Engine (or other solutions like Compute Engine or Kubernetes Engine) and Google Cloud Function. Using App Engine offers granular control over your application, while Cloud Function provides a much lower time to launch and addresses scalability and stability issues.
+
+The idea of the Google Cloud Functions Framework (GCFF) project is to provide the ability to deploy a web service using Google Cloud Functions. Cloud Functions can be run from a browser by the user and render a page with content. A single Cloud Function can be used for multiple servers, allowing it to implement both the server and client parts of the service.
+
+This approach is not a silver bullet in general. It provides some tradeoffs which may not be applicable for some use cases:
+
+- Maintenance cost for idle cloud functions is zero, but each call is significantly more expensive than classic app architectures. Do not use this approach for high load applications.
+- Reaction time (latency) from the server might be significantly slower than classic app architecture due to the warm-up requirement for cloud function.
+- Performance for this solution could be notably worse than a classic app.
+
+## Security aspects
+
+The approach to serve the client and server from a single entity (Google Cloud Function in this case) potentially weakens security in general. Also, higher costs for operation and less granularity on scalability may lead to increased risks for extra costs in case of a DDOS attack. It is highly recommended to make GCFF available only to a limited number of people to minimize the explained risks. Also, as the main use case is an internal tool, it may have some sensitive information available, so restricting access should also be necessary.
+
+One of the approaches to restrict access is making the cloud function available only in virtual private networks. It works well if you already have an internal VPN set up for other purposes (as part of internal policy).
+
+Another approach could be restricting the cloud function to authorized users in your organization. In this case, the user has to be authorized in their Google account to have access to this functionality. The downside of this approach is that it's not possible to provide authorization data to the browser, so a browser extension (e.g. ModHeader) should be used, which will add an 'Authorization' header to each request to the cloud function.
+
+# Features
+
+Currently, GCFF provides three types of web applications:
+
+- Static: This type serves static files.
+- Express: It binds an Express.js application to an endpoint for a cloud function.
+- React: It serves a React application at the provided path with support for React-Router.
+
+# Prerequisites
+
+- Google Cloud Project with Cloud Functions and Cloud Storage APIs enabled
+- Google Cloud Storage bucket to serve content
+- [gcloud CLI](https://cloud.google.com/sdk/docs/install)
+- [git](https://git-scm.com/downloads)
+- [nodejs and npm](https://nodejs.org/en/download)
+
+# Setup
+
+## Create Cloud Function
+
+GCFF CLI intentionally doesn't provide command to create cloud function as this command will just duplicate gcloud command. Cloud function could be added via https://console.cloud.google.com/functions/add. Next options are recommended/required:
+- (Recomended) Environment - 2nd gen
+- (Recomended) Require authentication - see reasons provided in section Ssecurity aspects
+- (Required) Runtime: node.js 18 or higher
+
+Initially cloud function could be pushed with default script (hello world). Actual server is going to be uploaded on next step
+
+## Upload server
+
+```
+git clone git@github.com:ashyshko/gcff-server.git
+cd gcff-server
+npm install
+npm run build
+gcff 
+```
+
+
+
 # Usage
 <!-- usage -->
 ```sh-session

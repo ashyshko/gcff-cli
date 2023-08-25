@@ -44,10 +44,6 @@ export default class ServerDeploy extends Command {
       default: false,
       relationships: [{type: 'none', flags: ['force']}],
     }),
-    gen2: Flags.boolean({
-      description:
-        'If enabled, this command will use Cloud Functions (Second generation)',
-    }),
     'entry-point': Flags.string({
       description:
         'Name of a Google Cloud Function (as defined in source code) that will be executed',
