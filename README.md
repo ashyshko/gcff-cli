@@ -4,8 +4,8 @@ GCFF Command Line Tool
 Deploy your web pages and API services easily with cloud function technology.
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![CircleCI](https://circleci.com/gh/ashyshko/gcff-cli/tree/main.svg?style=shield)](https://circleci.com/gh/ashyshko/gcff-cli/tree/main)
-[![GitHub license](https://img.shields.io/github/license/ashyshko/gcff-cli)](https://github.com/ashyshko/gcff-cli/blob/main/LICENSE)
+[![CircleCI](https://circleci.com/gh/ashyshko/gcff-cli/tree/master.svg?style=shield)](https://circleci.com/gh/ashyshko/gcff-cli/tree/master)
+[![GitHub license](https://img.shields.io/github/license/ashyshko/gcff-cli)](https://github.com/ashyshko/gcff-cli/blob/master/LICENSE)
 
 <!-- toc -->
 * [Usage](#usage)
