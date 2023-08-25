@@ -37,12 +37,6 @@ export default class ServerDeploy extends Command {
       char: 'f',
       description: 'Override existing source without verification',
       default: false,
-      relationships: [{type: 'none', flags: ['merge']}],
-    }),
-    merge: Flags.boolean({
-      description: 'Merge requested packages with uploaded',
-      default: false,
-      relationships: [{type: 'none', flags: ['force']}],
     }),
     'entry-point': Flags.string({
       description:
@@ -94,37 +88,43 @@ export default class ServerDeploy extends Command {
       )
     }
 
-    const dependenciesFromMetadata = getDependenciesFromMetadata(
-      func.buildConfig.environmentVariables,
-    )
-
     const dependenciesFromPackageJson = await getDependenciesFromPackageJson(
       args.path,
     )
 
-    const dependencies = mergeDependencies([
-      {
-        sourceName: 'uploaded',
-        dependencies: dependenciesFromMetadata.unitedDependencies,
-      },
-      {
-        sourceName: 'local',
-        dependencies: dependenciesFromPackageJson,
-      },
-    ])
+    const dependencies = flags.force ? (() => {
+      this.warn('Dependency check has been disabled by the `--force` flag. Only server dependencies are going to be installed, which may break some clients.')
+      return dependenciesFromPackageJson
+    })() : await (async () => {
+      const dependenciesFromMetadata = getDependenciesFromMetadata(
+        func.buildConfig.environmentVariables,
+      )
 
-    if (dependencies.conflicts.length > 0) {
-      printConflicts(this, dependencies.conflicts)
+      const dependencies = mergeDependencies([
+        {
+          sourceName: 'uploaded',
+          dependencies: dependenciesFromMetadata.unitedDependencies,
+        },
+        {
+          sourceName: 'local',
+          dependencies: dependenciesFromPackageJson,
+        },
+      ])
 
-      this.error('Conflict in versions detected')
-    }
+      if (dependencies.conflicts.length > 0) {
+        printConflicts(this, dependencies.conflicts)
 
-    const dependenciesDiff = diffDependencies(
-      dependenciesFromMetadata.unitedDependencies,
-      dependencies.dependencies,
-    )
+        this.error('Conflict in versions detected')
+      }
 
-    printDependenciesDiff(this, dependenciesDiff)
+      const dependenciesDiff = diffDependencies(
+        dependenciesFromMetadata.unitedDependencies,
+        dependencies.dependencies,
+      )
+
+      printDependenciesDiff(this, dependenciesDiff)
+      return dependencies.dependencies
+    })()
 
     await confirm(
       `You are about to upload ${chalk.bold(
@@ -136,7 +136,7 @@ export default class ServerDeploy extends Command {
     )
 
     const op = await stage('Preparing cloud function', async () => {
-      const content = await generate(args.path, dependencies.dependencies)
+      const content = await generate(args.path, dependencies)
 
       func.buildConfig.source.storageSource = await gcloudFunctionUploadSources(
         {
@@ -149,7 +149,7 @@ export default class ServerDeploy extends Command {
       func.buildConfig.environmentVariables = addDependenciesToMetadata(
         func.buildConfig.environmentVariables,
         dependenciesFromPackageJson,
-        dependencies.dependencies,
+        dependencies,
       )
 
       func.serviceConfig.environmentVariables = {

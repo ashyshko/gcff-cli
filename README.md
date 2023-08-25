@@ -60,24 +60,22 @@ Currently, GCFF provides three types of web applications:
 
 ## Create Cloud Function
 
-GCFF CLI intentionally doesn't provide command to create cloud function as this command will just duplicate gcloud command. Cloud function could be added via https://console.cloud.google.com/functions/add. Next options are recommended/required:
-- (Recomended) Environment - 2nd gen
-- (Recomended) Require authentication - see reasons provided in section Ssecurity aspects
-- (Required) Runtime: node.js 18 or higher
+The GCFF CLI intentionally does not provide a command to create a cloud function, as this command would simply duplicate the `gcloud` command. Cloud functions can be added through the [Google Cloud Console](https://console.cloud.google.com/functions/add). The following options are recommended/required:
+- (Recommended) Environment: 2nd gen
+- (Recommended) Require authentication: see reasons provided in the "Security Aspects" section
+- (Required) Runtime: Node.js 18 or higher
 
-Initially cloud function could be pushed with default script (hello world). Actual server is going to be uploaded on next step
+Initially, the cloud function can be pushed with the default script (hello world). The actual server will be uploaded in the next step.
 
-## Upload server
+## Upload Server
 
 ```
 git clone git@github.com:ashyshko/gcff-server.git
 cd gcff-server
 npm install
 npm run build
-gcff 
+gcff server deploy <CLOUD_FUNCTION_NAME> out --gcffPath=<GCS_BUCKET_NAME>
 ```
-
-
 
 # Usage
 <!-- usage -->
@@ -308,8 +306,8 @@ Updates Google Cloud Function
 
 ```
 USAGE
-  $ gcff server deploy FUNCTIONNAME PATH --region <value> [--accessToken <value> --project <value>] [-f] [--merge]
-    [--gen2] [--entry-point <value>] [--gcffPath <value>] [-y]
+  $ gcff server deploy FUNCTIONNAME PATH --region <value> [--accessToken <value> --project <value>] [-f]
+    [--entry-point <value>] [--gcffPath <value>] [-y]
 
 ARGUMENTS
   FUNCTIONNAME  Cloud function name
@@ -321,8 +319,6 @@ FLAGS
   --accessToken=<value>  Specifies the access token used to authenticate and authorize access to Google Cloud services.
   --entry-point=<value>  Name of a Google Cloud Function (as defined in source code) that will be executed
   --gcffPath=<value>     Google Cloud Storage bucket path for serving content
-  --gen2                 If enabled, this command will use Cloud Functions (Second generation)
-  --merge                Merge requested packages with uploaded
   --project=<value>      Specifies the ID of the Google Cloud project to associate with provided gcsUrl.
   --region=<value>       (required) [default: us-central1] The Cloud region for the function
 
