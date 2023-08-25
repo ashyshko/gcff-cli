@@ -7,7 +7,7 @@
     "gcff": "./bin/run"
   },
   "homepage": "https://github.com/ashyshko/gcff-cli",
-  "license": "MIT",
+  "license": "ISC",
   "main": "dist/index.js",
   "repository": "ashyshko/gcff-cli",
   "files": [
