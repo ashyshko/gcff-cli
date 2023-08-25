@@ -1,7 +1,7 @@
-oclif-hello-world
+GCFF Command Line Tool
 =================
 
-oclif example Hello World CLI
+Deploy your web pages and API services easily with cloud function technology.
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![CircleCI](https://circleci.com/gh/oclif/hello-world/tree/main.svg?style=shield)](https://circleci.com/gh/oclif/hello-world/tree/main)
