@@ -40,7 +40,6 @@ export const clientPushArgs = {
     async parse(value) {
       return Promise.resolve(parseFunctionPath(value))
     },
-    default: {functionName: '', destination: ''},
   })(),
 }
 

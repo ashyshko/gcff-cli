@@ -24,6 +24,9 @@
         ],
         "max-nested-callbacks": [
           "off"
+        ],
+        "@typescript-eslint/no-empty-function": [
+          "off"
         ]
       }
     }

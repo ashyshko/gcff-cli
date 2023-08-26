@@ -93,6 +93,7 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
+* [`gcff client init express FUNCTIONPATH`](#gcff-client-init-express-functionpath)
 * [`gcff client push express FUNCTIONPATH SCRIPT`](#gcff-client-push-express-functionpath-script)
 * [`gcff client push react FUNCTIONPATH PATH`](#gcff-client-push-react-functionpath-path)
 * [`gcff client push static FUNCTIONPATH PATH`](#gcff-client-push-static-functionpath-path)
@@ -101,6 +102,28 @@ USAGE
 * [`gcff dependencies sync FUNCTIONNAME`](#gcff-dependencies-sync-functionname)
 * [`gcff help [COMMANDS]`](#gcff-help-commands)
 * [`gcff server deploy FUNCTIONNAME PATH`](#gcff-server-deploy-functionname-path)
+
+## `gcff client init express FUNCTIONPATH`
+
+Creates express client from template
+
+```
+USAGE
+  $ gcff client init express FUNCTIONPATH [--out <value>] [--name <value>]
+
+ARGUMENTS
+  FUNCTIONPATH  Cloud function name and path (function-name/path/to/upload)
+
+FLAGS
+  --name=<value>  name for project
+  --out=<value>   path to clone expressjs client template
+
+DESCRIPTION
+  Creates express client from template
+
+EXAMPLES
+  $ gcff client init express function-name/server/path
+```
 
 ## `gcff client push express FUNCTIONPATH SCRIPT`
 
@@ -112,7 +135,7 @@ USAGE
     <value>] [--force] [-y]
 
 ARGUMENTS
-  FUNCTIONPATH  [default: [object Object]] Cloud function name and path (function-name/path/to/upload)
+  FUNCTIONPATH  Cloud function name and path (function-name/path/to/upload)
   SCRIPT        Location of AMD script with default export to express
 
 FLAGS
@@ -141,7 +164,7 @@ USAGE
     [--publicUrlPlaceholder <value>]
 
 ARGUMENTS
-  FUNCTIONPATH  [default: [object Object]] Cloud function name and path (function-name/path/to/upload)
+  FUNCTIONPATH  Cloud function name and path (function-name/path/to/upload)
   PATH          Location of files to deploy (local directory)
 
 FLAGS
@@ -173,7 +196,7 @@ USAGE
     [--default <value>] [--index <value>]
 
 ARGUMENTS
-  FUNCTIONPATH  [default: [object Object]] Cloud function name and path (function-name/path/to/upload)
+  FUNCTIONPATH  Cloud function name and path (function-name/path/to/upload)
   PATH          Location of files to deploy (local directory)
 
 FLAGS
