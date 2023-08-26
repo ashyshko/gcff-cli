@@ -38,9 +38,9 @@ export default class ClientList extends Command {
       auth,
     })
 
-    const {bucket} = getBucket({serviceConfig: func.serviceConfig, auth})
+    const {bucket, namePrefix} = getBucket({serviceConfig: func.serviceConfig, auth})
 
-    const modules = await findModules({bucket, namePrefix: ''})
+    const modules = await findModules({bucket, namePrefix})
     this.logJson(modules)
   }
 }

@@ -99,6 +99,7 @@ USAGE
 * [`gcff client push express FUNCTIONPATH SCRIPT`](#gcff-client-push-express-functionpath-script)
 * [`gcff client push react FUNCTIONPATH PATH`](#gcff-client-push-react-functionpath-path)
 * [`gcff client push static FUNCTIONPATH PATH`](#gcff-client-push-static-functionpath-path)
+* [`gcff client remove FUNCTIONPATH`](#gcff-client-remove-functionpath)
 * [`gcff dependencies check FUNCTIONNAME`](#gcff-dependencies-check-functionname)
 * [`gcff dependencies list FUNCTIONNAME`](#gcff-dependencies-list-functionname)
 * [`gcff dependencies sync FUNCTIONNAME`](#gcff-dependencies-sync-functionname)
@@ -264,6 +265,30 @@ DESCRIPTION
 
 EXAMPLES
   $ gcff client push static function-name/path /path/to/local/folder
+```
+
+## `gcff client remove FUNCTIONPATH`
+
+Removes client and its related files from cloud function
+
+```
+USAGE
+  $ gcff client remove FUNCTIONPATH --region <value> [--accessToken <value> --project <value>] [-y]
+
+ARGUMENTS
+  FUNCTIONPATH  Cloud function name and path (function-name/path/to/upload)
+
+FLAGS
+  -y, --yes              Automatically confirm any action
+  --accessToken=<value>  Specifies the access token used to authenticate and authorize access to Google Cloud services.
+  --project=<value>      Specifies the ID of the Google Cloud project to associate with provided gcsUrl.
+  --region=<value>       (required) [default: us-central1] The Cloud region for the function
+
+DESCRIPTION
+  Removes client and its related files from cloud function
+
+EXAMPLES
+  $ gcff client remove function-name/path
 ```
 
 ## `gcff dependencies check FUNCTIONNAME`

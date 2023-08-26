@@ -1,5 +1,6 @@
 import {expect} from 'chai'
 import {
+  batchOperations,
   filesHashDiff,
   getFiles,
   parseFunctionPath,
@@ -283,15 +284,15 @@ describe('utils/push-client', () => {
       }
 
       const aFile = {
-        save: stub(),
+        save: stub().resolves(),
       }
 
       const bFile = {
-        delete: stub(),
+        delete: stub().resolves(),
       }
 
       const newFile = {
-        save: stub(),
+        save: stub().resolves(),
       }
 
       bucket.file.callsFake((name: string) => {
@@ -820,6 +821,74 @@ describe('utils/push-client', () => {
           }),
         } as any,
       })).eventually.to.be.fulfilled
+    })
+  })
+
+  describe('batchOperations', () => {
+    afterEach(() => {
+      restore()
+    })
+
+    it('should work', async () => {
+      const fileToDelete = {
+        delete: stub().resolves(),
+      }
+      const fileToUpload = {
+        save: stub().resolves(),
+      }
+      await batchOperations({
+        name: 'dummy',
+        fileEntries: [['file/to/delete', null], ['file/to/upload', Buffer.from([1, 2, 3])]],
+        bucket: {
+          file(name: string) {
+            if (name === 'file/to/delete') {
+              return fileToDelete
+            }
+
+            if (name === 'file/to/upload') {
+              return fileToUpload
+            }
+
+            throw new Error('unknown file name')
+          },
+        } as any,
+        command: {
+          warn: stub(),
+        } as any,
+      })
+      assert.calledOnceWithExactly(fileToDelete.delete)
+      assert.calledOnceWithExactly(fileToUpload.save, Buffer.from([1, 2, 3]))
+    })
+
+    it('should ignore deletion errors', async () => {
+      const fileToDelete = {
+        delete: stub().rejects(new Error('dummy error')),
+      }
+      const fileToUpload = {
+        save: stub().resolves(),
+      }
+      await batchOperations({
+        name: 'dummy',
+        fileEntries: [['file/to/delete', null], ['file/to/upload', Buffer.from([1, 2, 3])]],
+        bucket: {
+          file(name: string) {
+            if (name === 'file/to/delete') {
+              return fileToDelete
+            }
+
+            if (name === 'file/to/upload') {
+              return fileToUpload
+            }
+
+            throw new Error('unknown file name')
+          },
+        } as any,
+        command: {
+          warn: stub(),
+        } as any,
+      })
+      assert.calledOnceWithExactly(fileToDelete.delete)
+      assert.calledOnceWithExactly(fileToUpload.save, Buffer.from([1, 2, 3]))
     })
   })
 })

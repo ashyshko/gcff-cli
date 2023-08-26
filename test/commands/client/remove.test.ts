@@ -2,9 +2,10 @@ import {expect, test} from '@oclif/test'
 import * as gcloudAuthModule from '../../../src/utils/gcloud-auth'
 import * as gcloudFunctionModule from '../../../src/utils/gcloud-function'
 import * as gcsUtilsModule from '../../../src/utils/gcs-utils'
-import * as findModulesModule from '../../../src/utils/find-modules'
+import * as pushClientModule from '../../../src/utils/push-client'
+import {assert, match, stub} from 'sinon'
 
-describe('client:list', () => {
+describe('client:remove', () => {
   test
   .stdout()
   .stub(gcloudAuthModule, 'gcloudAuth', async () => {
@@ -33,19 +34,30 @@ describe('client:list', () => {
       },
     })
     return {
-      bucket: 'dummy-bucket',
+      bucket: {
+        file: stub().callsFake(name => {
+          expect(name).to.equal('name/prefix/path/resolve.json')
+          return {
+            download: stub().resolves([Buffer.from('{ "files": { "f1.txt": "sha1", "f2.txt": "sha2" } }')]),
+          }
+        }),
+      },
       namePrefix: 'name/prefix/',
     }
   })
-  .stub(findModulesModule, 'findModules', (...args: any[]) => {
-    expect(args[0]).to.eqls({
-      bucket: 'dummy-bucket',
-      namePrefix: 'name/prefix/',
+  .stub(pushClientModule, 'batchOperations', stub().resolves())
+  .command(['client:remove', 'my-function/path', '--yes'])
+  .it('should remove module', ctx => {
+    const batchOperations = pushClientModule.batchOperations as any
+    assert.calledOnceWithExactly(batchOperations, {
+      name: 'removing',
+      fileEntries: [
+        ['name/prefix/path/resolve.json', null],
+        ['name/prefix/path/f1.txt', null],
+        ['name/prefix/path/f2.txt', null],
+      ],
+      bucket: match.any,
+      command: match.any,
     })
-    return Promise.resolve(['1', '2', '3'])
-  })
-  .command(['client:list', 'my-function', '--json'])
-  .it('should return modules', ctx => {
-    expect(JSON.parse(ctx.stdout)).to.eqls(['1', '2', '3'])
   })
 })

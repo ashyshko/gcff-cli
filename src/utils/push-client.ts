@@ -13,6 +13,7 @@ import {
   mergeDependencies,
 } from './dependencies'
 import {printConflicts} from '../commands/server/deploy'
+import {Bucket} from '@google-cloud/storage'
 
 export const clientPushFlags = {
   ...gcloudFlags,
@@ -63,7 +64,7 @@ export async function pushClient({
   dependencies: Record<string, string>;
   rules: Array<unknown>;
   command: Command;
-}): Promise<{viewUrl: string}> {
+}): Promise<{ viewUrl: string }> {
   const auth = await gcloudAuth(flags, command)
 
   const functionName = args.functionPath.functionName
@@ -258,32 +259,56 @@ export async function pushClient({
     flags.yes,
   )
 
-  const progress = ux.progress({
-    format: 'uploading [{bar}] {duration}s | ETA: {eta}s | {value}/{total}',
+  await batchOperations({
+    name: 'uploading',
+    bucket,
+    fileEntries: fileEntries.map(([name, body]) => [
+      `${uploadPath}${name}`,
+      body,
+    ]),
+    command,
   })
-  progress.start(fileEntries.length, 0)
-  let uploaded = 0
-  await Promise.all(
-    fileEntries.map(async ([file, content]) => {
-      await (content === null ?
-        bucket.file(`${uploadPath}${file}`).delete() :
-        bucket.file(`${uploadPath}${file}`).save(content))
-
-      ++uploaded
-      progress.update(uploaded)
-    }),
-  )
-  progress.stop()
 
   return {
     viewUrl: func.url + '/' + destination,
   }
 }
 
+export async function batchOperations({
+  name,
+  bucket,
+  fileEntries,
+  command,
+}: {
+  fileEntries: Array<[string, Buffer | null]>;
+  bucket: Bucket;
+  name: string;
+  command: Command
+}): Promise<void> {
+  const progress = ux.progress({
+    format: `${name} [{bar}] {duration}s | ETA: {eta}s | {value}/{total}`,
+  })
+  progress.start(fileEntries.length, 0)
+  let uploaded = 0
+  await Promise.all(
+    fileEntries.map(async ([file, content]) => {
+      await (content === null ?
+        (bucket.file(file).delete()).catch(error => {
+          command.warn(`Can't remove file '${chalk.bold(file)}': ${chalk.italic(error)}`)
+        }) :
+        bucket.file(file).save(content))
+
+      ++uploaded
+      progress.update(uploaded)
+    }),
+  )
+  progress.stop()
+}
+
 export function parseFunctionPath(functionPath: string): {
   functionName: string;
   destination: string;
-  combined: string
+  combined: string;
 } {
   const match = functionPath.match(/^([^/]+)(\/(.*))?$/)
   if (!match) {
