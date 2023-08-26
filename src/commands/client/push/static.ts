@@ -63,7 +63,7 @@ export default class ClientPushStatic extends Command {
       rules.push({path: '**', type: 'static', name: flags.default})
     }
 
-    await pushClient({
+    const {viewUrl} = await pushClient({
       flags,
       args: {
         functionPath: args.functionPath!,
@@ -73,5 +73,7 @@ export default class ClientPushStatic extends Command {
       dependencies: {},
       command: this,
     })
+
+    this.logJson({viewUrl})
   }
 }

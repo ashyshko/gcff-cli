@@ -6,7 +6,7 @@ import * as path from 'node:path'
 describe('client:push:react', () => {
   test
   .stdout()
-  .stub(pushClientModule, 'pushClient', stub().resolves())
+  .stub(pushClientModule, 'pushClient', stub().resolves({viewUrl: '://view/url'}))
   .stub(
     pushClientModule,
     'getFiles',
@@ -78,7 +78,7 @@ describe('client:push:react', () => {
 
   test
   .stdout()
-  .stub(pushClientModule, 'pushClient', stub().resolves())
+  .stub(pushClientModule, 'pushClient', stub().resolves({viewUrl: '://view/url'}))
   .stub(
     pushClientModule,
     'getFiles',
@@ -107,7 +107,7 @@ describe('client:push:react', () => {
 
   test
   .stdout()
-  .stub(pushClientModule, 'pushClient', stub().resolves())
+  .stub(pushClientModule, 'pushClient', stub().resolves({viewUrl: '://view/url'}))
   .stub(
     pushClientModule,
     'getFiles',
@@ -194,7 +194,7 @@ describe('client:push:react', () => {
 
   test
   .stdout()
-  .stub(pushClientModule, 'pushClient', stub().resolves())
+  .stub(pushClientModule, 'pushClient', stub().resolves({viewUrl: '://view/url'}))
   .stub(
     pushClientModule,
     'getFiles',

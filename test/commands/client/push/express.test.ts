@@ -6,7 +6,7 @@ import {assert, match, stub} from 'sinon'
 describe('client:push:express', () => {
   test
   .stdout()
-  .stub(pushClientModule, 'pushClient', stub().resolves())
+  .stub(pushClientModule, 'pushClient', stub().resolves({viewUrl: '://view/url'}))
   .stub(
     fs,
     'readFile',

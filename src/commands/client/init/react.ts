@@ -1,4 +1,4 @@
-import {Args, Command, Flags} from '@oclif/core'
+import {Args, Command} from '@oclif/core'
 import {parseFunctionPath} from '../../../utils/push-client'
 import * as fs from 'node:fs/promises'
 import path = require('node:path');

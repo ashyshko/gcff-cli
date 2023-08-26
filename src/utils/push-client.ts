@@ -63,7 +63,7 @@ export async function pushClient({
   dependencies: Record<string, string>;
   rules: Array<unknown>;
   command: Command;
-}): Promise<void> {
+}): Promise<{viewUrl: string}> {
   const auth = await gcloudAuth(flags, command)
 
   const functionName = args.functionPath.functionName
@@ -277,6 +277,10 @@ export async function pushClient({
     }),
   )
   progress.stop()
+
+  return {
+    viewUrl: func.url + '/' + destination,
+  }
 }
 
 export function parseFunctionPath(functionPath: string): {

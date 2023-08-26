@@ -110,7 +110,7 @@ export default class ClientPushReact extends Command {
       )
     }
 
-    await pushClient({
+    const {viewUrl} = await pushClient({
       flags,
       args: {
         functionPath: args.functionPath!,
@@ -120,5 +120,7 @@ export default class ClientPushReact extends Command {
       rules,
       command: this,
     })
+
+    this.logJson({viewUrl})
   }
 }

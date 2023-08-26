@@ -52,7 +52,7 @@ export default class ClientPushExpress extends Command {
       await fs.readFile(flags.manifest, {encoding: 'utf-8'}),
     ).dependencies
 
-    await pushClient({
+    const {viewUrl} = await pushClient({
       flags,
       args: {
         functionPath: args.functionPath!,
@@ -64,5 +64,7 @@ export default class ClientPushExpress extends Command {
       rules,
       command: this,
     })
+
+    this.logJson({viewUrl})
   }
 }
