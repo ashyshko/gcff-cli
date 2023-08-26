@@ -63,7 +63,7 @@ export default class ClientInitExpress extends Command {
     )
 
     await stage('Patching packge.json', () =>
-      this.patchPackageJson(outDir, packageName, functionPath),
+      this.patchPackageJson(outDir, packageName, functionPath.combined),
     )
 
     await gitCmd(['-C', outDir, 'remote', 'remove', 'origin'], {
@@ -80,7 +80,7 @@ export default class ClientInitExpress extends Command {
     this.log(`  ${chalk.bold('npm run start')}: Start server locally`)
     this.log(
       `  ${chalk.bold('npm run deploy')}: Deploy server to ${chalk.bold(
-        functionPath.functionName,
+        functionPath.combined,
       )}`,
     )
     this.log(
@@ -99,19 +99,15 @@ export default class ClientInitExpress extends Command {
   private async patchPackageJson(
     outDir: string,
     packageName: string,
-    functionPath: { functionName: string; destination: string },
+    functionPath: string,
   ): Promise<void> {
     const originalContent = await fs.promises.readFile(
       path.join(outDir, 'package.json'),
       {encoding: 'utf-8'},
     )
-    const remotePath =
-      functionPath.destination === '' ?
-        functionPath.functionName :
-        `${functionPath.functionName}/${functionPath.destination}`
     const content = originalContent
     .replace(/<PACKAGE_NAME>/g, packageName)
-    .replace(/<FUNCTION_NAME>/g, remotePath)
+    .replace(/<FUNCTION_NAME>/g, functionPath)
     await fs.promises.writeFile(path.join(outDir, 'package.json'), content, {
       encoding: 'utf-8',
     })

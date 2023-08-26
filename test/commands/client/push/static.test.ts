@@ -32,6 +32,7 @@ describe('client:push:static', () => {
         functionPath: {
           functionName: 'my-function',
           destination: 'path/',
+          combined: 'my-function/path',
         },
       },
       files: {
@@ -78,6 +79,7 @@ describe('client:push:static', () => {
         functionPath: {
           functionName: 'my-function',
           destination: 'path/',
+          combined: 'my-function/path',
         },
       },
       files: {
@@ -136,6 +138,7 @@ describe('client:push:static', () => {
         functionPath: {
           functionName: 'my-function',
           destination: 'path/',
+          combined: 'my-function/path',
         },
       },
       files: {

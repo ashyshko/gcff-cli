@@ -32,6 +32,7 @@ describe('client:push:express', () => {
         functionPath: {
           functionName: 'my-function',
           destination: 'path/',
+          combined: 'my-function/path',
         },
       },
       files: {

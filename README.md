@@ -94,6 +94,7 @@ USAGE
 # Commands
 <!-- commands -->
 * [`gcff client init express FUNCTIONPATH`](#gcff-client-init-express-functionpath)
+* [`gcff client init react FUNCTIONPATH SRCFOLDER`](#gcff-client-init-react-functionpath-srcfolder)
 * [`gcff client push express FUNCTIONPATH SCRIPT`](#gcff-client-push-express-functionpath-script)
 * [`gcff client push react FUNCTIONPATH PATH`](#gcff-client-push-react-functionpath-path)
 * [`gcff client push static FUNCTIONPATH PATH`](#gcff-client-push-static-functionpath-path)
@@ -123,6 +124,26 @@ DESCRIPTION
 
 EXAMPLES
   $ gcff client init express function-name/server/path
+```
+
+## `gcff client init react FUNCTIONPATH SRCFOLDER`
+
+Initializes react client
+
+```
+USAGE
+  $ gcff client init react FUNCTIONPATH SRCFOLDER
+
+ARGUMENTS
+  FUNCTIONPATH  Cloud function name and path (function-name/path/to/upload)
+  SRCFOLDER     Directory containing the React package. It is recommended to use 'create-react-app' to initialize the
+                directory.
+
+DESCRIPTION
+  Initializes react client
+
+EXAMPLES
+  $ gcff client init react function-name/server/path react-app-folder
 ```
 
 ## `gcff client push express FUNCTIONPATH SCRIPT`

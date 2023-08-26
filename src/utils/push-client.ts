@@ -282,6 +282,7 @@ export async function pushClient({
 export function parseFunctionPath(functionPath: string): {
   functionName: string;
   destination: string;
+  combined: string
 } {
   const match = functionPath.match(/^([^/]+)(\/(.*))?$/)
   if (!match) {
@@ -298,6 +299,7 @@ export function parseFunctionPath(functionPath: string): {
   return {
     functionName: match[1],
     destination,
+    combined: functionPath,
   }
 }
 

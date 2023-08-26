@@ -76,7 +76,7 @@ describe('commands/client/init/express', () => {
       restore()
     })
 
-    it('should work with root destination', async () => {
+    it('should work', async () => {
       const readFile = stub(fs.promises, 'readFile').resolves(
         'text file with <PACKAGE_NAME> and <FUNCTION_NAME>, arguments (e.g. <FUNCTION_NAME>) could appear twice',
       )
@@ -84,10 +84,7 @@ describe('commands/client/init/express', () => {
       const cmd = new ClientInitExpress([], {} as any)
       // @ts-expect-error Property 'patchPackageJson' is private
       const patchPackageJson = cmd.patchPackageJson.bind(cmd)
-      await patchPackageJson('/path/to/', 'my-package', {
-        functionName: 'my-function',
-        destination: '',
-      })
+      await patchPackageJson('/path/to/', 'my-package', 'my-function/with/prefix/')
       assert.calledOnceWithExactly(
         readFile,
         path.join('/path/to', 'package.json'),
@@ -96,32 +93,7 @@ describe('commands/client/init/express', () => {
       assert.calledOnceWithExactly(
         writeFile,
         path.join('/path/to', 'package.json'),
-        'text file with my-package and my-function, arguments (e.g. my-function) could appear twice',
-        {encoding: 'utf-8'},
-      )
-    })
-
-    it('should work with destination', async () => {
-      const readFile = stub(fs.promises, 'readFile').resolves(
-        'text file with <PACKAGE_NAME> and <FUNCTION_NAME>, arguments (e.g. <FUNCTION_NAME>) could appear twice',
-      )
-      const writeFile = stub(fs.promises, 'writeFile').resolves()
-      const cmd = new ClientInitExpress([], {} as any)
-      // @ts-expect-error Property 'patchPackageJson' is private
-      const patchPackageJson = cmd.patchPackageJson.bind(cmd)
-      await patchPackageJson('/path/to/', 'my-package', {
-        functionName: 'my-function',
-        destination: 'dest/prefix/',
-      })
-      assert.calledOnceWithExactly(
-        readFile,
-        path.join('/path/to', 'package.json'),
-        {encoding: 'utf-8'},
-      )
-      assert.calledOnceWithExactly(
-        writeFile,
-        path.join('/path/to', 'package.json'),
-        'text file with my-package and my-function/dest/prefix/, arguments (e.g. my-function/dest/prefix/) could appear twice',
+        'text file with my-package and my-function/with/prefix/, arguments (e.g. my-function/with/prefix/) could appear twice',
         {encoding: 'utf-8'},
       )
     })

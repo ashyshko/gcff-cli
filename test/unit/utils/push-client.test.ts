@@ -102,22 +102,27 @@ describe('utils/push-client', () => {
       expect(parseFunctionPath('a')).to.eqls({
         functionName: 'a',
         destination: '',
+        combined: 'a',
       })
       expect(parseFunctionPath('a/')).to.eqls({
         functionName: 'a',
         destination: '',
+        combined: 'a/',
       })
       expect(parseFunctionPath('a/b')).to.eqls({
         functionName: 'a',
         destination: 'b/',
+        combined: 'a/b',
       })
       expect(parseFunctionPath('a/b/')).to.eqls({
         functionName: 'a',
         destination: 'b/',
+        combined: 'a/b/',
       })
       expect(parseFunctionPath('a/b/c')).to.eqls({
         functionName: 'a',
         destination: 'b/c/',
+        combined: 'a/b/c',
       })
     })
 
