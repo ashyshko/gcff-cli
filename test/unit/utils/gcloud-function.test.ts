@@ -47,7 +47,7 @@ describe('utils/gcloud-function', () => {
       )
     })
 
-    it('should return undefined if function is not found', async () => {
+    it('should throw error if function is not found', async () => {
       stub(stageModule, 'stage').callsFake((_, v) =>
         v(() => {
           /* noop */
@@ -69,7 +69,7 @@ describe('utils/gcloud-function', () => {
             project: 'my-project',
           },
         }),
-      ).eventually.to.be.undefined
+      ).eventually.rejectedWith('Gcloud function not found: my-function')
     })
 
     it('should throw exception on HTTP error', async () => {

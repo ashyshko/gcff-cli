@@ -74,9 +74,6 @@ export async function pushClient({
     region: flags.region,
     auth,
   })
-  if (!func) {
-    throw new Error('Gcloud function not found')
-  }
 
   const {bucket, namePrefix} = getBucket({
     serviceConfig: func.serviceConfig,

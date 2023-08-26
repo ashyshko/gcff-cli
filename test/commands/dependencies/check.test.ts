@@ -6,6 +6,7 @@ import * as dependenciesModule from '../../../src/utils/dependencies'
 import * as dependenciesListModule from '../../../src/utils/dependencies-list'
 import * as fs from 'node:fs/promises'
 import {assert, stub} from 'sinon'
+import {Command} from '@oclif/core'
 
 describe('dependencies:check', () => {
   test
@@ -360,6 +361,7 @@ describe('dependencies:check', () => {
       equals: false,
     }
   })
+  .stub(Command.prototype, 'logJson', stub())
   .command(['dependencies:check', 'my-function'])
   .catch('Found 1 conflicts', {raiseIfNotThrown: true})
   .it('should error in case of conflicts', ctx => {

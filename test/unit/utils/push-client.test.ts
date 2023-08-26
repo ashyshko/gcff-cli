@@ -532,35 +532,6 @@ describe('utils/push-client', () => {
       })
     })
 
-    it('should throw exception if cloud function not found', async () => {
-      stub(gcloudAuthModule, 'gcloudAuth').resolves({
-        accessToken: 'my-token',
-        project: 'my-project',
-      })
-      stub(gcloudFunctionModule, 'gcloudFunctionDescribe').resolves() // changed to undefined
-
-      await expect(pushClient({
-        flags: {
-          region: 'some-region',
-          project: 'my-project',
-          force: false,
-          yes: false,
-        },
-        args: {
-          functionPath: {
-            functionName: 'my-function',
-            destination: 'my/path/',
-          },
-        },
-        files: {},
-        dependencies: {},
-        rules: [],
-        command: {
-          log: stub(),
-        } as any,
-      })).eventually.rejectedWith('Gcloud function not found')
-    })
-
     it('should throw exception on gcloud error', async () => {
       stub(gcloudAuthModule, 'gcloudAuth').resolves({
         accessToken: 'my-token',

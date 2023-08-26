@@ -9,6 +9,7 @@ import * as stageModule from '../../../src/utils/stage'
 import * as confirmModule from '../../../src/utils/confirm'
 import * as zipModule from '../../../src/utils/zip'
 import {assert, stub} from 'sinon'
+import {Command} from '@oclif/core'
 
 describe('server:deploy', () => {
   test
@@ -278,23 +279,6 @@ describe('server:deploy', () => {
   .stub(gcloudAuthModule, 'gcloudAuth', async () => {
     return {accessToken: 'my-token', project: 'my-project'}
   })
-  .stub(gcloudFunctionModule, 'gcloudFunctionDescribe', stub().resolves())
-  .stub(stageModule, 'stage', (...args: any[]) => {
-    return args[1](
-      /* updateStatus */ () => {
-        /* noop */
-      },
-    )
-  })
-  .command(['server:deploy', 'my-function', './test', '--gcffPath=gcff/path'])
-  .catch('Gcloud function not found', {raiseIfNotThrown: true})
-  .it('should return error if function is not found', () => {/* noop */})
-
-  test
-  .stdout()
-  .stub(gcloudAuthModule, 'gcloudAuth', async () => {
-    return {accessToken: 'my-token', project: 'my-project'}
-  })
   .stub(gcloudFunctionModule, 'gcloudFunctionDescribe', (...args: any[]) => {
     expect(args[0]).to.eqls({
       functionName: 'my-function',
@@ -434,6 +418,7 @@ describe('server:deploy', () => {
       return Promise.resolve()
     }),
   )
+  .stub(Command.prototype, 'warn', stub())
   .command(['server:deploy', 'my-function', './test', '--force'])
   .it('should apply server dependencies with --force flag', ctx => {
     assert.calledOnce(

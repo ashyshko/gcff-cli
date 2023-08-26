@@ -65,13 +65,13 @@ export async function gcloudFunctionDescribe({
   functionName: string;
   region: string;
   auth: GcloudAuth;
-}): Promise<GcloudFunction | undefined> {
+}): Promise<GcloudFunction> {
   const res = await fetch(
     `https://cloudfunctions.googleapis.com/v2/projects/${auth.project}/locations/${region}/functions/${functionName}?access_token=${auth.accessToken}`,
   )
   if (!res.ok) {
     if (res.status === 404) {
-      return undefined
+      throw new Error('Gcloud function not found: ' + functionName)
     }
 
     throw new Error(`HTTP error ${res.status} ${res.statusText}`)

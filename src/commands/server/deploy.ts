@@ -76,10 +76,6 @@ export default class ServerDeploy extends Command {
       auth,
     })
 
-    if (!func) {
-      throw new Error('Gcloud function not found')
-    }
-
     const gcffPath =
       flags.gcffPath ?? func.serviceConfig.environmentVariables?.GCFF_PATH
     if (!gcffPath) {
