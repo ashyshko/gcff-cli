@@ -56,6 +56,22 @@ export default class ClientInitReact extends Command {
         args.functionPath!.combined,
       )}`,
     )
+    this.log(
+      `Consider adding ${chalk.inverse(
+        'basename={process.env.PUBLIC_URL}',
+      )} to the ${chalk.italic(
+        'BrowserRouter',
+      )} component in order to ensure proper functionality of ${chalk.bold(
+        'react-router-dom',
+      )}.`,
+    )
+    this.log(
+      `  ${chalk.gray.italic(
+        `For more information, please refer to the following link: ${chalk.underline(
+          'https://github.com/ashyshko/gcff-cli/blob/master/docs/react-dom-router-support.md',
+        )}`,
+      )}`,
+    )
     this.log(chalk.italic('Happy hacking! (c)'))
   }
 }
