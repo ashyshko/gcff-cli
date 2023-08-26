@@ -16,6 +16,22 @@ Deploy your web pages and API services easily with cloud function technology.
 * [Commands](#commands)
 <!-- tocstop -->
 
+
+# Usage
+<!-- usage -->
+```sh-session
+$ npm install -g gcff
+$ gcff COMMAND
+running command...
+$ gcff (--version)
+gcff/0.0.0 darwin-x64 node-v18.12.1
+$ gcff --help [COMMAND]
+USAGE
+  $ gcff COMMAND
+...
+```
+<!-- usagestop -->
+
 # Motivation
 
 Currently, there are many frameworks that provide scalable web service access. These frameworks are mainly optimized for high load use cases and user-facing functionality. However, they come with high maintenance costs, complicated initial deployment procedures, and requirements for system health status monitoring.
@@ -77,20 +93,6 @@ npm run build
 gcff server deploy <CLOUD_FUNCTION_NAME> out --gcffPath=<GCS_BUCKET_NAME>
 ```
 
-# Usage
-<!-- usage -->
-```sh-session
-$ npm install -g gcff
-$ gcff COMMAND
-running command...
-$ gcff (--version)
-gcff/0.0.0 darwin-x64 node-v18.12.1
-$ gcff --help [COMMAND]
-USAGE
-  $ gcff COMMAND
-...
-```
-<!-- usagestop -->
 # Commands
 <!-- commands -->
 * [`gcff client init express FUNCTIONPATH`](#gcff-client-init-express-functionpath)
