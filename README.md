@@ -96,6 +96,7 @@ USAGE
 * [`gcff client init express FUNCTIONPATH`](#gcff-client-init-express-functionpath)
 * [`gcff client init react FUNCTIONPATH SRCFOLDER`](#gcff-client-init-react-functionpath-srcfolder)
 * [`gcff client list FUNCTIONNAME`](#gcff-client-list-functionname)
+* [`gcff client prune FUNCTIONNAME`](#gcff-client-prune-functionname)
 * [`gcff client push express FUNCTIONPATH SCRIPT`](#gcff-client-push-express-functionpath-script)
 * [`gcff client push react FUNCTIONPATH PATH`](#gcff-client-push-react-functionpath-path)
 * [`gcff client push static FUNCTIONPATH PATH`](#gcff-client-push-static-functionpath-path)
@@ -172,6 +173,32 @@ DESCRIPTION
 
 EXAMPLES
   $ gcff client list function-name
+```
+
+## `gcff client prune FUNCTIONNAME`
+
+Remove all unlinked files and verify files checksum
+
+```
+USAGE
+  $ gcff client prune FUNCTIONNAME --region <value> [--accessToken <value> --project <value>] [--json]
+
+ARGUMENTS
+  FUNCTIONNAME  Cloud function name
+
+FLAGS
+  --accessToken=<value>  Specifies the access token used to authenticate and authorize access to Google Cloud services.
+  --project=<value>      Specifies the ID of the Google Cloud project to associate with provided gcsUrl.
+  --region=<value>       (required) [default: us-central1] The Cloud region for the function
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Remove all unlinked files and verify files checksum
+
+EXAMPLES
+  $ gcff client prune function-name
 ```
 
 ## `gcff client push express FUNCTIONPATH SCRIPT`
