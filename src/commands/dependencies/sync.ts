@@ -28,7 +28,6 @@ export default class DependenciesSync extends Command {
     ...gcloudFlags,
     region: Flags.string({
       description: 'The Cloud region for the function',
-      required: true,
       default: 'us-central1',
     }),
     ignoreConflicts: Flags.boolean({

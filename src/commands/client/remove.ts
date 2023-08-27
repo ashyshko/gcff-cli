@@ -1,4 +1,4 @@
-import {Args, Command, Flags} from '@oclif/core'
+import {Command, Flags} from '@oclif/core'
 import {gcloudAuth, gcloudFlags} from '../../utils/gcloud-auth'
 import {
   batchOperations,
@@ -20,7 +20,6 @@ export default class ClientRemove extends Command {
     ...gcloudFlags,
     region: Flags.string({
       description: 'The Cloud region for the function',
-      required: true,
       default: 'us-central1',
     }),
     yes: clientPushFlags.yes,

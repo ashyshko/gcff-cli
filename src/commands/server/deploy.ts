@@ -30,7 +30,6 @@ export default class ServerDeploy extends Command {
     ...gcloudFlags,
     region: Flags.string({
       description: 'The Cloud region for the function',
-      required: true,
       default: 'us-central1',
     }),
     force: Flags.boolean({

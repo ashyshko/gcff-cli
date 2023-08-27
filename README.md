@@ -157,7 +157,7 @@ List all modules pushed to cloud function
 
 ```
 USAGE
-  $ gcff client list FUNCTIONNAME --region <value> [--accessToken <value> --project <value>] [--json]
+  $ gcff client list FUNCTIONNAME [--accessToken <value> --project <value>] [--region <value>] [--json]
 
 ARGUMENTS
   FUNCTIONNAME  Cloud function name
@@ -165,7 +165,7 @@ ARGUMENTS
 FLAGS
   --accessToken=<value>  Specifies the access token used to authenticate and authorize access to Google Cloud services.
   --project=<value>      Specifies the ID of the Google Cloud project to associate with provided gcsUrl.
-  --region=<value>       (required) [default: us-central1] The Cloud region for the function
+  --region=<value>       [default: us-central1] The Cloud region for the function
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -183,15 +183,18 @@ Remove all unlinked files and verify files checksum
 
 ```
 USAGE
-  $ gcff client prune FUNCTIONNAME --region <value> [--accessToken <value> --project <value>] [--json]
+  $ gcff client prune FUNCTIONNAME [--accessToken <value> --project <value>] [--region <value>]
+    [--removeDamagedFiles] [-y] [--json]
 
 ARGUMENTS
   FUNCTIONNAME  Cloud function name
 
 FLAGS
+  -y, --yes              Automatically confirm any action
   --accessToken=<value>  Specifies the access token used to authenticate and authorize access to Google Cloud services.
   --project=<value>      Specifies the ID of the Google Cloud project to associate with provided gcsUrl.
-  --region=<value>       (required) [default: us-central1] The Cloud region for the function
+  --region=<value>       [default: us-central1] The Cloud region for the function
+  --removeDamagedFiles   Remove damaged files (files with mismatched checksums or incorrect resolve.json files) from GCS
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -209,7 +212,7 @@ Push express app to server
 
 ```
 USAGE
-  $ gcff client push express FUNCTIONPATH SCRIPT --region <value> --manifest <value> [--accessToken <value> --project
+  $ gcff client push express FUNCTIONPATH SCRIPT --manifest <value> [--accessToken <value> --project <value>] [--region
     <value>] [--force] [-y]
 
 ARGUMENTS
@@ -223,7 +226,7 @@ FLAGS
                          to be removed
   --manifest=<value>     (required) path to package.json with dependencies for this project
   --project=<value>      Specifies the ID of the Google Cloud project to associate with provided gcsUrl.
-  --region=<value>       (required) [default: us-central1] The Cloud region for the function
+  --region=<value>       [default: us-central1] The Cloud region for the function
 
 DESCRIPTION
   Push express app to server
@@ -238,8 +241,8 @@ Push react app content to server
 
 ```
 USAGE
-  $ gcff client push react FUNCTIONPATH PATH --region <value> [--accessToken <value> --project <value>] [--force] [-y]
-    [--publicUrlPlaceholder <value>]
+  $ gcff client push react FUNCTIONPATH PATH [--accessToken <value> --project <value>] [--region <value>] [--force]
+    [-y] [--publicUrlPlaceholder <value>]
 
 ARGUMENTS
   FUNCTIONPATH  Cloud function name and path (function-name/path/to/upload)
@@ -255,7 +258,7 @@ FLAGS
   --publicUrlPlaceholder=<value>  [default: __REACT_APP_PUBLIC_URL_PLACEHOLDER__] Placeholder used as PUBLIC_URL
                                   environment variable for React. Replaced with real path by server. Empty string to
                                   avoid replacement
-  --region=<value>                (required) [default: us-central1] The Cloud region for the function
+  --region=<value>                [default: us-central1] The Cloud region for the function
 
 DESCRIPTION
   Push react app content to server
@@ -270,8 +273,8 @@ Push static content to server
 
 ```
 USAGE
-  $ gcff client push static FUNCTIONPATH PATH --region <value> [--accessToken <value> --project <value>] [--force] [-y]
-    [--default <value>] [--index <value>]
+  $ gcff client push static FUNCTIONPATH PATH [--accessToken <value> --project <value>] [--region <value>] [--force]
+    [-y] [--default <value>] [--index <value>]
 
 ARGUMENTS
   FUNCTIONPATH  Cloud function name and path (function-name/path/to/upload)
@@ -287,7 +290,7 @@ FLAGS
   --index=<value>        Serve provided file if root requested. If --index is not specified but --default is specified,
                          default file is served as index
   --project=<value>      Specifies the ID of the Google Cloud project to associate with provided gcsUrl.
-  --region=<value>       (required) [default: us-central1] The Cloud region for the function
+  --region=<value>       [default: us-central1] The Cloud region for the function
 
 DESCRIPTION
   Push static content to server
@@ -302,7 +305,7 @@ Removes client and its related files from cloud function
 
 ```
 USAGE
-  $ gcff client remove FUNCTIONPATH --region <value> [--accessToken <value> --project <value>] [-y]
+  $ gcff client remove FUNCTIONPATH [--accessToken <value> --project <value>] [--region <value>] [-y]
 
 ARGUMENTS
   FUNCTIONPATH  Cloud function name and path (function-name/path/to/upload)
@@ -311,7 +314,7 @@ FLAGS
   -y, --yes              Automatically confirm any action
   --accessToken=<value>  Specifies the access token used to authenticate and authorize access to Google Cloud services.
   --project=<value>      Specifies the ID of the Google Cloud project to associate with provided gcsUrl.
-  --region=<value>       (required) [default: us-central1] The Cloud region for the function
+  --region=<value>       [default: us-central1] The Cloud region for the function
 
 DESCRIPTION
   Removes client and its related files from cloud function
@@ -326,7 +329,7 @@ Check relevancy for nodejs dependencies for provided gcff cloud function
 
 ```
 USAGE
-  $ gcff dependencies check FUNCTIONNAME --region <value> [--json] [--accessToken <value> --project <value>]
+  $ gcff dependencies check FUNCTIONNAME [--json] [--accessToken <value> --project <value>] [--region <value>]
     [--saveUpdatedDependencies <value>]
 
 ARGUMENTS
@@ -336,7 +339,7 @@ FLAGS
   --accessToken=<value>              Specifies the access token used to authenticate and authorize access to Google
                                      Cloud services.
   --project=<value>                  Specifies the ID of the Google Cloud project to associate with provided gcsUrl.
-  --region=<value>                   (required) [default: us-central1] The Cloud region for the function
+  --region=<value>                   [default: us-central1] The Cloud region for the function
   --saveUpdatedDependencies=<value>  JSON File name to save updated dependencies
 
 GLOBAL FLAGS
@@ -355,7 +358,7 @@ List currently installed packages for provided gcff cloud function
 
 ```
 USAGE
-  $ gcff dependencies list FUNCTIONNAME --region <value> [--json] [--accessToken <value> --project <value>]
+  $ gcff dependencies list FUNCTIONNAME [--json] [--accessToken <value> --project <value>] [--region <value>]
 
 ARGUMENTS
   FUNCTIONNAME  Cloud function name
@@ -363,7 +366,7 @@ ARGUMENTS
 FLAGS
   --accessToken=<value>  Specifies the access token used to authenticate and authorize access to Google Cloud services.
   --project=<value>      Specifies the ID of the Google Cloud project to associate with provided gcsUrl.
-  --region=<value>       (required) [default: us-central1] The Cloud region for the function
+  --region=<value>       [default: us-central1] The Cloud region for the function
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -381,8 +384,8 @@ Update dependencies without updating server
 
 ```
 USAGE
-  $ gcff dependencies sync FUNCTIONNAME --region <value> [--accessToken <value> --project <value>] [--ignoreConflicts]
-    [--removeDependency <value>] [--loadDependencies <value> | --addDependency <value> | ] [-y]
+  $ gcff dependencies sync FUNCTIONNAME [--accessToken <value> --project <value>] [--region <value>]
+    [--ignoreConflicts] [--removeDependency <value>] [--loadDependencies <value> | --addDependency <value> | ] [-y]
 
 ARGUMENTS
   FUNCTIONNAME  Cloud function name
@@ -395,7 +398,7 @@ FLAGS
   --ignoreConflicts              Ignore conflicts and upload only dependencies without conflicts
   --loadDependencies=<value>     Load dependencies from JSON file, use field "dependencies"
   --project=<value>              Specifies the ID of the Google Cloud project to associate with provided gcsUrl.
-  --region=<value>               (required) [default: us-central1] The Cloud region for the function
+  --region=<value>               [default: us-central1] The Cloud region for the function
   --removeDependency=<value>...  [default: ] Force remove dependency, returns error if dependency existed
 
 DESCRIPTION
@@ -431,7 +434,7 @@ Updates Google Cloud Function
 
 ```
 USAGE
-  $ gcff server deploy FUNCTIONNAME PATH --region <value> [--accessToken <value> --project <value>] [-f]
+  $ gcff server deploy FUNCTIONNAME PATH [--accessToken <value> --project <value>] [--region <value>] [-f]
     [--entry-point <value>] [--gcffPath <value>] [-y]
 
 ARGUMENTS
@@ -445,7 +448,7 @@ FLAGS
   --entry-point=<value>  Name of a Google Cloud Function (as defined in source code) that will be executed
   --gcffPath=<value>     Google Cloud Storage bucket path for serving content
   --project=<value>      Specifies the ID of the Google Cloud project to associate with provided gcsUrl.
-  --region=<value>       (required) [default: us-central1] The Cloud region for the function
+  --region=<value>       [default: us-central1] The Cloud region for the function
 
 DESCRIPTION
   Updates Google Cloud Function

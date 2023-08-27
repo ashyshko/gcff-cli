@@ -16,13 +16,11 @@ export default class ClientPrune extends Command {
     ...gcloudFlags,
     region: Flags.string({
       description: 'The Cloud region for the function',
-      required: true,
       default: 'us-central1',
     }),
     removeDamagedFiles: Flags.boolean({
       description: 'Remove damaged files (files with mismatched checksums or incorrect resolve.json files) from GCS',
       default: false,
-      required: true,
     }),
     yes: clientPushFlags.yes,
   };
