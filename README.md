@@ -8,11 +8,11 @@ Deploy your web pages and API services easily with cloud function technology.
 [![GitHub license](https://img.shields.io/github/license/ashyshko/gcff-cli)](https://github.com/ashyshko/gcff-cli/blob/master/LICENSE)
 
 <!-- toc -->
+* [Usage](#usage)
 * [Motivation](#motivation)
 * [Features](#features)
 * [Prerequisites](#prerequisites)
 * [Setup](#setup)
-* [Usage](#usage)
 * [Commands](#commands)
 <!-- tocstop -->
 
@@ -24,7 +24,7 @@ $ npm install -g gcff
 $ gcff COMMAND
 running command...
 $ gcff (--version)
-gcff/0.0.0 darwin-x64 node-v18.12.1
+gcff/0.1.0 darwin-x64 node-v18.12.1
 $ gcff --help [COMMAND]
 USAGE
   $ gcff COMMAND
