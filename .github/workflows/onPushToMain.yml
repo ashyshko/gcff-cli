@@ -8,7 +8,9 @@ on:
 jobs:
   release:
     uses: oclif/github-workflows/.github/workflows/githubRelease.yml@main
-    secrets: inherit
+    secrets:
+      SVC_CLI_BOT_GITHUB_TOKEN: ${{ secrets.SVC_CLI_BOT_GITHUB_TOKEN }}
+
 
   # most repos won't use this
   # depends on previous job to avoid git collisions, not for any functionality reason
