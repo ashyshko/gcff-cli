@@ -1,15 +1,44 @@
 {
   "name": "gcff",
-  "version": "0.0.0",
-  "description": "GCFF CLI",
+  "version": "0.1.0",
+  "description": "GCFF CLI: Deploy your web pages and API services easily with cloud function technology",
+  "keywords": [
+    "GCFF CLI",
+    "Deploy",
+    "Web pages",
+    "API services",
+    "Cloud function technology",
+    "Command-line tool",
+    "Deployment automation",
+    "Serverless",
+    "Cloud functions",
+    "Web development",
+    "API deployment",
+    "Easy deployment",
+    "Cloud computing",
+    "Function-as-a-Service",
+    "Web hosting",
+    "Serverless architecture",
+    "Developer tool",
+    "Cloud platform",
+    "Service deployment",
+    "Web application deployment",
+    "Function orchestration",
+    "Rapid deployment",
+    "Infrastructure management",
+    "Cloud-based services"
+  ],
   "author": "Andrey Shishko",
   "bin": {
     "gcff": "./bin/run"
   },
-  "homepage": "https://github.com/ashyshko/gcff-cli",
+  "homepage": "https://github.com/ashyshko/gcff-cli#readme",
   "license": "ISC",
   "main": "dist/index.js",
-  "repository": "ashyshko/gcff-cli",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ashyshko/gcff-cli.git"
+  },
   "files": [
     "/bin",
     "/dist",
@@ -76,8 +105,5 @@
     "node": ">=16.0.0"
   },
   "bugs": "https://github.com/ashyshko/gcff-cli/issues",
-  "keywords": [
-    "oclif"
-  ],
   "types": "dist/index.d.ts"
 }
