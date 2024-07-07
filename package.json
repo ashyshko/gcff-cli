@@ -1,6 +1,6 @@
 {
   "name": "gcff",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "GCFF CLI: Deploy your web pages and API services easily with cloud function technology",
   "keywords": [
     "GCFF CLI",

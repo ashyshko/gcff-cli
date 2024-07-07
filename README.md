@@ -23,7 +23,7 @@ $ npm install -g gcff
 $ gcff COMMAND
 running command...
 $ gcff (--version)
-gcff/0.1.0 darwin-x64 node-v18.12.1
+gcff/0.1.2 darwin-x64 node-v22.2.0
 $ gcff --help [COMMAND]
 USAGE
   $ gcff COMMAND
@@ -96,6 +96,7 @@ gcff server deploy <CLOUD_FUNCTION_NAME> out --gcffPath=<GCS_BUCKET_NAME>
 <!-- commands -->
 * [`gcff client init express FUNCTIONPATH`](#gcff-client-init-express-functionpath)
 * [`gcff client init react FUNCTIONPATH SRCFOLDER`](#gcff-client-init-react-functionpath-srcfolder)
+* [`gcff client init vite-react FUNCTIONPATH SRCFOLDER`](#gcff-client-init-vite-react-functionpath-srcfolder)
 * [`gcff client list FUNCTIONNAME`](#gcff-client-list-functionname)
 * [`gcff client prune FUNCTIONNAME`](#gcff-client-prune-functionname)
 * [`gcff client push express FUNCTIONPATH SCRIPT`](#gcff-client-push-express-functionpath-script)
@@ -148,6 +149,26 @@ DESCRIPTION
 
 EXAMPLES
   $ gcff client init react function-name/server/path react-app-folder
+```
+
+## `gcff client init vite-react FUNCTIONPATH SRCFOLDER`
+
+Initializes vite-react client
+
+```
+USAGE
+  $ gcff client init vite-react FUNCTIONPATH SRCFOLDER
+
+ARGUMENTS
+  FUNCTIONPATH  Cloud function name and path (function-name/path/to/upload)
+  SRCFOLDER     Directory containing the ViteJS project. It is recommended to use 'npm create vite@latest my-react-app
+                -- --template react-ts' to initialize the directory.
+
+DESCRIPTION
+  Initializes vite-react client
+
+EXAMPLES
+  $ gcff client init vite-react function-name/server/path vite-react-app-folder
 ```
 
 ## `gcff client list FUNCTIONNAME`
