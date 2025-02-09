@@ -21,6 +21,10 @@ export const clientPushFlags = {
     description: 'The Cloud region for the function',
     default: 'us-central1',
   }),
+  allowUnauthenticated: Flags.boolean({
+    description: 'Allow unauthenticated invocations',
+    default: false,
+  }),
   force: Flags.boolean({
     description:
       'Override content even if it was not changed. Unlinked files from previous content are not going to be removed',
@@ -52,6 +56,7 @@ export async function pushClient({
   command,
 }: {
   flags: Partial<GcloudAuth> & {
+    allowUnauthenticated: boolean;
     region: string;
     force: boolean;
     yes: boolean;
@@ -89,6 +94,7 @@ export async function pushClient({
   }
 
   const payload = {
+    allowUnauthenticated: flags.allowUnauthenticated,
     files: Object.fromEntries(
       Object.entries(files).map(([name, buffer]) => [name, fileHash(buffer)]),
     ),
@@ -109,6 +115,7 @@ export async function pushClient({
     }
 
     const prevResolveJson: typeof payload = await (async (): Promise<{
+      allowUnauthenticated: boolean;
       files: Record<string, string>;
       rules: unknown[];
       dependencies: Record<string, string>;
@@ -125,6 +132,7 @@ export async function pushClient({
           (error as { code?: number })?.code === 404
         ) {
           return {
+            allowUnauthenticated: false,
             files: {},
             rules: [],
             dependencies: {},
@@ -282,7 +290,7 @@ export async function batchOperations({
   fileEntries: Array<[string, Buffer | null]>;
   bucket: Bucket;
   name: string;
-  command: Command
+  command: Command;
 }): Promise<void> {
   const progress = ux.progress({
     format: `${name} [{bar}] {duration}s | ETA: {eta}s | {value}/{total}`,
@@ -292,8 +300,15 @@ export async function batchOperations({
   await Promise.all(
     fileEntries.map(async ([file, content]) => {
       await (content === null ?
-        (bucket.file(file).delete()).catch(error => {
-          command.warn(`Can't remove file '${chalk.bold(file)}': ${chalk.italic(error)}`)
+        bucket
+        .file(file)
+        .delete()
+        .catch(error => {
+          command.warn(
+            `Can't remove file '${chalk.bold(file)}': ${chalk.italic(
+              error,
+            )}`,
+          )
         }) :
         bucket.file(file).save(content))
 
