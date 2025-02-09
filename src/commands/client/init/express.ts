@@ -24,6 +24,10 @@ export default class ClientInitExpress extends Command {
       description: 'name for project',
       required: false,
     }),
+    ws: Flags.boolean({
+      description: 'use websocket instead of http',
+      default: false,
+    }),
   };
 
   static args = {
@@ -52,11 +56,13 @@ export default class ClientInitExpress extends Command {
       outDir: flags.out,
     })
 
+    const repository = flags.ws ? 'gcff-client-express-ws-template' : 'gcff-client-express-template'
+
     await gitCmd(
       [
         'clone',
         '--',
-        'git@github.com:ashyshko/gcff-client-express-template.git',
+        `git@github.com:ashyshko/${repository}.git`,
         outDir,
       ],
       {command: this},

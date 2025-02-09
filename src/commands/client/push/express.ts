@@ -20,6 +20,10 @@ export default class ClientPushExpress extends Command {
       description: 'path to package.json with dependencies for this project',
       required: true,
     }),
+    ws: Flags.boolean({
+      description: 'push as express-ws',
+      default: false,
+    }),
   };
 
   static args = {
@@ -35,15 +39,17 @@ export default class ClientPushExpress extends Command {
 
     args.script = path.resolve(args.script)
 
+    const type = flags.ws ? 'express-ws' : 'express'
+
     const rules = [
       {
         path: '.',
-        type: 'express',
+        type,
         src: 'index.js',
       },
       {
         path: '**',
-        type: 'express',
+        type,
         src: 'index.js',
       },
     ]
